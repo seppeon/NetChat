@@ -6,5 +6,7 @@ namespace Net
 	{
 		Socket();
 		~Socket();
+	private:
+		
 	};
 }
