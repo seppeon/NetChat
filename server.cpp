@@ -6,7 +6,7 @@ using namespace Net;
 
 int main()
 {
-	Socket socket{ IpVersion::IPV4, Type::TCP };
+	Socket socket{ IpVersion::Ipv4, Type::TCP };
 	std::cout << GetStatusDescription(socket.Bind(Ipv4{ 127, 0, 0, 1 }, 8080)) << "\n";
 	std::cout << GetStatusDescription(socket.Listen()) << "\n";
 

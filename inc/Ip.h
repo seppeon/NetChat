@@ -4,7 +4,7 @@
 
 namespace Net
 {
-	enum class IpVersion { IPV4, IPV6 };
+	enum class IpVersion { Ipv4, Ipv6 };
 
 	struct Ip
 	{

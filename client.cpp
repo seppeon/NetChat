@@ -6,5 +6,5 @@ using namespace Net;
 
 int main()
 {
-	Socket socket{ IpVersion::IPV4, Type::TCP };
+	Socket socket{ IpVersion::Ipv4, Type::TCP };
 }

@@ -124,8 +124,8 @@ namespace Net
 	{
 		switch (version)
 		{
-		case IpVersion::IPV4: return AF_INET;
-		case IpVersion::IPV6: return AF_INET6;
+		case IpVersion::Ipv4: return AF_INET;
+		case IpVersion::Ipv6: return AF_INET6;
 		default: return 0;
 		}
 	}
@@ -224,8 +224,8 @@ namespace Net
 			};
 			switch(ip.GetVersion())
 			{
-			case IpVersion::IPV4: return process(GetIpv4SocketStruct(ip, port));
-			case IpVersion::IPV6: return process(GetIpv6SocketStruct(ip, port));
+			case IpVersion::Ipv4: return process(GetIpv4SocketStruct(ip, port));
+			case IpVersion::Ipv6: return process(GetIpv6SocketStruct(ip, port));
 			default: 		      return BindStatus::Unknown;
 			}
 		}
@@ -238,8 +238,8 @@ namespace Net
 			};
 			switch(ip_version)
 			{
-			case IpVersion::IPV4: return process(GetIpv4AnySocketStruct(port));
-			case IpVersion::IPV6: return process(GetIpv6AnySocketStruct(port));
+			case IpVersion::Ipv4: return process(GetIpv4AnySocketStruct(port));
+			case IpVersion::Ipv6: return process(GetIpv6AnySocketStruct(port));
 			default: 		      return BindStatus::Unknown;
 			}
 		}
@@ -358,8 +358,8 @@ namespace Net
 	{
 		switch (version)
 		{
-		case IpVersion::IPV4: return AF_INET;
-		case IpVersion::IPV6: return AF_INET6;
+		case IpVersion::Ipv4: return AF_INET;
+		case IpVersion::Ipv6: return AF_INET6;
 		default: return 0;
 		}
 	}

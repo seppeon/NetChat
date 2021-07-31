@@ -4,12 +4,12 @@ namespace Net
 {
 	Ip::Ip(Ipv4 const & ip) noexcept
 		: m_data{ ToString(ip) }
-		, m_version{ IpVersion::IPV4 }
+		, m_version{ IpVersion::Ipv4 }
 	{}
 
 	Ip::Ip(Ipv6 const & ip) noexcept
 		: m_data{ ToString(ip) }
-		, m_version{ IpVersion::IPV6 }
+		, m_version{ IpVersion::Ipv6 }
 	{}
 
 	IpVersion Ip::GetVersion() const noexcept
