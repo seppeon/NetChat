@@ -65,22 +65,22 @@ namespace Net
 
 	std::string GetErrorDescription(WindowsSocketError error) noexcept
 	{
-	switch(error)
-	{
-	case WindowsSocketError::WinsockNotInitialized: return "A successful WSAStartup call must occur before using this function.";
-	case WindowsSocketError::NetworkSystemDown: return "The network subsystem or the associated service provider has failed.";
-	case WindowsSocketError::AddressFamilyNotSupported: return "The specified address family is not supported. For example, an application tried to create a socket for the AF_IRDA address family but an infrared adapter and device driver is not installed on the local computer.";
-	case WindowsSocketError::OperationInProgress: return "A blocking Windows Sockets 1.1 call is in progress, or the service provider is still processing a callback function.";
-	case WindowsSocketError::NoMoreDescriptorsAvaliable: return "No more socket descriptors are available.";
-	case WindowsSocketError::InvalidArgument: return "An invalid argument was supplied. This error is returned if the af parameter is set to AF_UNSPEC and the type and protocol parameter are unspecified.";
-	case WindowsSocketError::InvalidProvider: return "The service provider returned a version other than 2.2.";
-	case WindowsSocketError::InvalidProcedureTable: return "The service provider returned an invalid or incomplete procedure table to the WSPStartup.";
-	case WindowsSocketError::NoBuffers: return "No buffer space is available. The socket cannot be created.";
-	case WindowsSocketError::NoProtocolSupport: return "The specified protocol is not supported.";
-	case WindowsSocketError::Prototype: return "The specified protocol is the wrong type for this socket.";
-	case WindowsSocketError::ProviderFailedInit: return "The service provider failed to initialize. This error is returned if a layered service provider (LSP) or namespace provider was improperly installed or the provider fails to operate correctly.";
-	case WindowsSocketError::SocketTypeSupported: return "The specified socket type is not supported in this address family.";
-	default: return "Unknown";
-	}
+		switch(error)
+		{
+		case WindowsSocketError::WinsockNotInitialized: return "A successful WSAStartup call must occur before using this function.";
+		case WindowsSocketError::NetworkSystemDown: return "The network subsystem or the associated service provider has failed.";
+		case WindowsSocketError::AddressFamilyNotSupported: return "The specified address family is not supported. For example, an application tried to create a socket for the AF_IRDA address family but an infrared adapter and device driver is not installed on the local computer.";
+		case WindowsSocketError::OperationInProgress: return "A blocking Windows Sockets 1.1 call is in progress, or the service provider is still processing a callback function.";
+		case WindowsSocketError::NoMoreDescriptorsAvaliable: return "No more socket descriptors are available.";
+		case WindowsSocketError::InvalidArgument: return "An invalid argument was supplied. This error is returned if the af parameter is set to AF_UNSPEC and the type and protocol parameter are unspecified.";
+		case WindowsSocketError::InvalidProvider: return "The service provider returned a version other than 2.2.";
+		case WindowsSocketError::InvalidProcedureTable: return "The service provider returned an invalid or incomplete procedure table to the WSPStartup.";
+		case WindowsSocketError::NoBuffers: return "No buffer space is available. The socket cannot be created.";
+		case WindowsSocketError::NoProtocolSupport: return "The specified protocol is not supported.";
+		case WindowsSocketError::Prototype: return "The specified protocol is the wrong type for this socket.";
+		case WindowsSocketError::ProviderFailedInit: return "The service provider failed to initialize. This error is returned if a layered service provider (LSP) or namespace provider was improperly installed or the provider fails to operate correctly.";
+		case WindowsSocketError::SocketTypeSupported: return "The specified socket type is not supported in this address family.";
+		default: return "Unknown";
+		}
 	};
 }
