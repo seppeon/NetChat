@@ -109,6 +109,32 @@ namespace Net
 	};
 	std::string GetStatusDescription(ReceiveStatus status) noexcept;
 
+	enum class ConnectStatus
+	{
+		Success,
+		Unknown,
+		NotInitialized, 			// A successful WSAStartup call must occur before using this function.
+		NetworkDown, 				// The network subsystem has failed.
+		AddressInUse, 				// The socket's local address is already in use and the socket was not marked to allow address reuse with SO_REUSEADDR. This error usually occurs when executing bind, but could be delayed until the connect function if the bind was to a wildcard address (INADDR_ANY or in6addr_any) for the local IP address. A specific address needs to be implicitly bound by the connect function.
+		Cancelled, 					// The blocking Windows Socket 1.1 call was canceled through WSACancelBlockingCall.
+		OperationInProgress, 		// A blocking Windows Sockets 1.1 call is in progress, or the service provider is still processing a callback function.
+		ConnectInProgress, 			// A nonblocking connect call is in progress on the specified socket.
+		InvalidAddress, 			// The remote address is not a valid address (such as INADDR_ANY or in6addr_any) .
+		AddressFamilyNotSupported, 	// Addresses in the specified family cannot be used with this socket.
+		ConnectionRefused, 			// The attempt to connect was forcefully rejected.
+		InvalidSocketDetails, 		// The sockaddr structure pointed to by the name contains incorrect address format for the associated address family or the namelen parameter is too small. This error is also returned if the sockaddr structure pointed to by the name parameter with a length specified in the namelen parameter is not in a valid part of the user address space.
+		ListeningSocket, 			// The parameter s is a listening socket, it shouldn't be.
+		IsConnected, 				// The socket is already connected (connection-oriented sockets only).
+		NetworkUnreachable, 		// The network cannot be reached from this host at this time.
+		HostUnreachable, 			// A socket operation was attempted to an unreachable host.
+		NoBufferSpace, 				// No buffer space is available. The socket cannot be connected.
+		NotASocket, 				// The descriptor specified in the s parameter is not a socket.
+		ConnectTimeout, 			// An attempt to connect timed out without establishing a connection.
+		WouldBlock, 				// The socket is marked as nonblocking and the connection cannot be completed immediately.
+		BroadcastNotEnabled, 		// An attempt to connect a datagram socket to broadcast address failed because setsockopt option SO_BROADCAST is not enabled. 
+	};
+	std::string GetStatusDescription(ConnectStatus status) noexcept;
+
 	struct SendResult
 	{
 		SendStatus status;
@@ -136,11 +162,16 @@ namespace Net
 	struct Socket
 	{
 		Socket() = default;
+
 		Socket(BaseSocket && socket) noexcept;
+
 		Socket(IpVersion ip_version, Type type) noexcept;
+
 		~Socket();
 
 		BindStatus Bind(Ip const & ip, uint16_t port) const noexcept;
+
+		ConnectStatus Connect(Ip const & ip, uint16_t port) const noexcept;
 
 		BindStatus Bind(IpVersion ip_version, uint16_t port) const noexcept;
 
@@ -168,6 +199,8 @@ namespace Net
 		virtual SendResult Send(const char * buf, size_t length, int flags = 0) const noexcept = 0;
 
 		virtual ReceiveResult Receive(char * buf, size_t length, int flags = 0) const noexcept = 0;
+
+		virtual ConnectStatus Connect(Ip const & ip, uint16_t port) const noexcept = 0;
 
 		virtual ~BaseSocket();
 	};

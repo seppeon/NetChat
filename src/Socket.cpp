@@ -120,6 +120,34 @@ namespace Net
 		return "";
 	}
 
+	std::string GetStatusDescription(ConnectStatus status) noexcept
+	{
+		switch (status)
+		{
+		case ConnectStatus::Success: return "Connected successfully.";
+		case ConnectStatus::NotInitialized: return "A successful WSAStartup call must occur before using this function.";
+		case ConnectStatus::NetworkDown: return "The network subsystem has failed.";
+		case ConnectStatus::AddressInUse: return "The socket's local address is already in use and the socket was not marked to allow address reuse with SO_REUSEADDR. This error usually occurs when executing bind, but could be delayed until the connect function if the bind was to a wildcard address (INADDR_ANY or in6addr_any) for the local IP address. A specific address needs to be implicitly bound by the connect function.";
+		case ConnectStatus::Cancelled: return "The blocking Windows Socket 1.1 call was canceled through WSACancelBlockingCall.";
+		case ConnectStatus::OperationInProgress: return "A blocking Windows Sockets 1.1 call is in progress, or the service provider is still processing a callback function.";
+		case ConnectStatus::ConnectInProgress: return "A nonblocking connect call is in progress on the specified socket.";
+		case ConnectStatus::InvalidAddress: return "The remote address is not a valid address (such as INADDR_ANY or in6addr_any) .";
+		case ConnectStatus::AddressFamilyNotSupported: return "Addresses in the specified family cannot be used with this socket.";
+		case ConnectStatus::ConnectionRefused: return "The attempt to connect was forcefully rejected.";
+		case ConnectStatus::InvalidSocketDetails: return "The sockaddr structure pointed to by the name contains incorrect address format for the associated address family or the namelen parameter is too small. This error is also returned if the sockaddr structure pointed to by the name parameter with a length specified in the namelen parameter is not in a valid part of the user address space.";
+		case ConnectStatus::ListeningSocket: return "The parameter s is a listening socket, it shouldn't be.";
+		case ConnectStatus::IsConnected: return "The socket is already connected (connection-oriented sockets only).";
+		case ConnectStatus::NetworkUnreachable: return "The network cannot be reached from this host at this time.";
+		case ConnectStatus::HostUnreachable: return "A socket operation was attempted to an unreachable host.";
+		case ConnectStatus::NoBufferSpace: return "No buffer space is available. The socket cannot be connected.";
+		case ConnectStatus::NotASocket: return "The descriptor specified in the s parameter is not a socket.";
+		case ConnectStatus::ConnectTimeout: return "An attempt to connect timed out without establishing a connection.";
+		case ConnectStatus::WouldBlock: return "The socket is marked as nonblocking and the connection cannot be completed immediately.";
+		case ConnectStatus::BroadcastNotEnabled: return "An attempt to connect a datagram socket to broadcast address failed because setsockopt option SO_BROADCAST is not enabled. ";
+		}
+		return "";
+	}
+
 	static auto GetFamily(IpVersion version) noexcept
 	{
 		switch (version)
@@ -197,6 +225,37 @@ namespace Net
 		return BindStatus::Success;
 	}
 
+	static ConnectStatus TranslateConnectResult(int r) noexcept
+	{
+		if (r == SOCKET_ERROR)
+		{
+			switch (WSAGetLastError())
+			{
+			case WSANOTINITIALISED: return ConnectStatus::NotInitialized;
+			case WSAENETDOWN: 		return ConnectStatus::NetworkDown;
+			case WSAEADDRINUSE: 	return ConnectStatus::AddressInUse;
+			case WSAEINTR: 			return ConnectStatus::Cancelled;
+			case WSAEINPROGRESS: 	return ConnectStatus::OperationInProgress;
+			case WSAEALREADY: 		return ConnectStatus::ConnectInProgress;
+			case WSAEADDRNOTAVAIL: 	return ConnectStatus::InvalidAddress;
+			case WSAEAFNOSUPPORT: 	return ConnectStatus::AddressFamilyNotSupported;
+			case WSAECONNREFUSED: 	return ConnectStatus::ConnectionRefused;
+			case WSAEFAULT: 		return ConnectStatus::InvalidSocketDetails;
+			case WSAEINVAL: 		return ConnectStatus::ListeningSocket;
+			case WSAEISCONN: 		return ConnectStatus::IsConnected;
+			case WSAENETUNREACH: 	return ConnectStatus::NetworkUnreachable;
+			case WSAEHOSTUNREACH: 	return ConnectStatus::HostUnreachable;
+			case WSAENOBUFS: 		return ConnectStatus::NoBufferSpace;
+			case WSAENOTSOCK: 		return ConnectStatus::NotASocket;
+			case WSAETIMEDOUT: 		return ConnectStatus::ConnectTimeout;
+			case WSAEWOULDBLOCK: 	return ConnectStatus::WouldBlock;
+			case WSAEACCES: 		return ConnectStatus::BroadcastNotEnabled;
+			default: 				return ConnectStatus::Unknown;
+			}
+		}
+		return ConnectStatus::Success;
+	}
+
 	struct WindowsSocket : BaseSocket
 	{
 		WinsockRaii winsock;
@@ -241,6 +300,20 @@ namespace Net
 			case IpVersion::Ipv4: return process(GetIpv4AnySocketStruct(port));
 			case IpVersion::Ipv6: return process(GetIpv6AnySocketStruct(port));
 			default: 		      return BindStatus::Unknown;
+			}
+		}
+
+		ConnectStatus Connect(Ip const & ip, uint16_t port) const noexcept
+		{
+			auto process = [&](auto sock_address) -> ConnectStatus
+			{
+				return TranslateConnectResult(connect(socket.Get(), (sockaddr *)&sock_address, sizeof(sock_address)));
+			};
+			switch(ip.GetVersion())
+			{
+			case IpVersion::Ipv4: return process(GetIpv4SocketStruct(ip, port));
+			case IpVersion::Ipv6: return process(GetIpv6SocketStruct(ip, port));
+			default: 		      return ConnectStatus::Unknown;
 			}
 		}
 
@@ -392,9 +465,7 @@ namespace Net
 		: handle{ std::make_unique<WindowsSocket>(static_cast<WindowsSocket&&>(socket)) }
 	{}
 
-	Socket::~Socket()
-	{
-	}
+	Socket::~Socket(){}
 
 	BindStatus Socket::Bind(Ip const & ip, uint16_t port) const noexcept
 	{
@@ -424,6 +495,11 @@ namespace Net
 	ReceiveResult Socket::Receive(char * buf, size_t length, int flags) const noexcept
 	{
 		return handle->Receive(buf, length, flags);
+	}
+
+	ConnectStatus Socket::Connect(Ip const & ip, uint16_t port) const noexcept
+	{
+		return handle->Connect(ip, port);
 	}
 
 	BaseSocket::~BaseSocket(){}
