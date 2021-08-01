@@ -183,15 +183,15 @@ namespace Net
 			switch (WSAGetLastError())
 			{
 			case WSANOTINITIALISED: return BindStatus::NotInitialised;
-			case WSAENETDOWN: return BindStatus::NetworkDown;
-			case WSAEACCES: return BindStatus::Access;
-			case WSAEADDRINUSE: return BindStatus::AddressInUse;
-			case WSAEADDRNOTAVAIL: return BindStatus::AddressNotAvaliable;
-			case WSAEFAULT: return BindStatus::InvalidPointerArgument;
-			case WSAEINPROGRESS: return BindStatus::OperationInProgress;
-			case WSAEINVAL: return BindStatus::SocketAlreadyBound;
-			case WSAENOBUFS: return BindStatus::NoPortsAvaliable;
-			case WSAENOTSOCK: return BindStatus::NotASocket;
+			case WSAENETDOWN: 		return BindStatus::NetworkDown;
+			case WSAEACCES: 		return BindStatus::Access;
+			case WSAEADDRINUSE: 	return BindStatus::AddressInUse;
+			case WSAEADDRNOTAVAIL: 	return BindStatus::AddressNotAvaliable;
+			case WSAEFAULT: 		return BindStatus::InvalidPointerArgument;
+			case WSAEINPROGRESS: 	return BindStatus::OperationInProgress;
+			case WSAEINVAL: 		return BindStatus::SocketAlreadyBound;
+			case WSAENOBUFS: 		return BindStatus::NoPortsAvaliable;
+			case WSAENOTSOCK: 		return BindStatus::NotASocket;
 			}
 		}
 		return BindStatus::Success;
@@ -249,19 +249,19 @@ namespace Net
 			auto r = listen(socket.Get(), backlog);
 			if (r == SOCKET_ERROR)
 			{
-				switch (r)
+				switch (WSAGetLastError())
 				{
 				case WSANOTINITIALISED: return ListenStatus::NotInitialized;
-				case WSAENETDOWN: return ListenStatus::NetworkDown;
-				case WSAEADDRINUSE: return ListenStatus::AddressInUse;
-				case WSAEINPROGRESS: return ListenStatus::OperationInProgress;
-				case WSAEINVAL: return ListenStatus::UnboundSocket;
-				case WSAEISCONN: return ListenStatus::AlreadyConnected;
-				case WSAEMFILE: return ListenStatus::NoMoreDescriptors;
-				case WSAENOBUFS: return ListenStatus::NoBufferSpace;
-				case WSAENOTSOCK: return ListenStatus::NotASocket;
-				case WSAEOPNOTSUPP: return ListenStatus::NotSupported;
-				default: return ListenStatus::Unknown;
+				case WSAENETDOWN: 		return ListenStatus::NetworkDown;
+				case WSAEADDRINUSE: 	return ListenStatus::AddressInUse;
+				case WSAEINPROGRESS: 	return ListenStatus::OperationInProgress;
+				case WSAEINVAL: 		return ListenStatus::UnboundSocket;
+				case WSAEISCONN: 		return ListenStatus::AlreadyConnected;
+				case WSAEMFILE: 		return ListenStatus::NoMoreDescriptors;
+				case WSAENOBUFS: 		return ListenStatus::NoBufferSpace;
+				case WSAENOTSOCK: 		return ListenStatus::NotASocket;
+				case WSAEOPNOTSUPP: 	return ListenStatus::NotSupported;
+				default: 				return ListenStatus::Unknown;
 				}
 			}
 			return ListenStatus::Success;
@@ -300,25 +300,25 @@ namespace Net
 				switch( WSAGetLastError())
 				{
 				case WSANOTINITIALISED: return { SendStatus::NotInitialized };
-				case WSAENETDOWN: return { SendStatus::NetworkDown };
-				case WSAEACCES: return { SendStatus::BroadcastAddressNotEnabled };
-				case WSAEINTR: return { SendStatus::Cancelled };
-				case WSAEINPROGRESS: return { SendStatus::OperationInProgress };
-				case WSAEFAULT: return { SendStatus::InvalidBufferParameter };
-				case WSAENETRESET: return { SendStatus::NetworkReset };
-				case WSAENOBUFS: return { SendStatus::NoBufferSpace };
-				case WSAENOTCONN: return { SendStatus::NotConnected };
-				case WSAENOTSOCK: return { SendStatus::NotASocket };
-				case WSAEOPNOTSUPP: return { SendStatus::NotSupported };
-				case WSAESHUTDOWN: return { SendStatus::Shutdown };
-				case WSAEWOULDBLOCK: return { SendStatus::WouldBlock };
-				case WSAEMSGSIZE: return { SendStatus::MessageTooLarge };
-				case WSAEHOSTUNREACH: return { SendStatus::HostUnreachable };
-				case WSAEINVAL: return { SendStatus::UnboundSocket };
-				case WSAECONNABORTED: return { SendStatus::ConnectionAborted };
-				case WSAECONNRESET: return { SendStatus::ConnectionReset };
-				case WSAETIMEDOUT: return { SendStatus::Timeout };
-				default: return { SendStatus::Unknown };
+				case WSAENETDOWN: 		return { SendStatus::NetworkDown };
+				case WSAEACCES: 		return { SendStatus::BroadcastAddressNotEnabled };
+				case WSAEINTR: 			return { SendStatus::Cancelled };
+				case WSAEINPROGRESS: 	return { SendStatus::OperationInProgress };
+				case WSAEFAULT: 		return { SendStatus::InvalidBufferParameter };
+				case WSAENETRESET: 		return { SendStatus::NetworkReset };
+				case WSAENOBUFS: 		return { SendStatus::NoBufferSpace };
+				case WSAENOTCONN: 		return { SendStatus::NotConnected };
+				case WSAENOTSOCK: 		return { SendStatus::NotASocket };
+				case WSAEOPNOTSUPP: 	return { SendStatus::NotSupported };
+				case WSAESHUTDOWN: 		return { SendStatus::Shutdown };
+				case WSAEWOULDBLOCK: 	return { SendStatus::WouldBlock };
+				case WSAEMSGSIZE: 		return { SendStatus::MessageTooLarge };
+				case WSAEHOSTUNREACH: 	return { SendStatus::HostUnreachable };
+				case WSAEINVAL: 		return { SendStatus::UnboundSocket };
+				case WSAECONNABORTED: 	return { SendStatus::ConnectionAborted };
+				case WSAECONNRESET: 	return { SendStatus::ConnectionReset };
+				case WSAETIMEDOUT: 		return { SendStatus::Timeout };
+				default: 				return { SendStatus::Unknown };
 				}
 			}
 			return { SendStatus::Success, static_cast<size_t>(r) };
@@ -332,22 +332,22 @@ namespace Net
 				switch (WSAGetLastError())
 				{
 				case WSANOTINITIALISED: return { ReceiveStatus::NotInitialized };
-				case WSAENETDOWN: return { ReceiveStatus::NetworkDown };
-				case WSAEFAULT: return { ReceiveStatus::InvalidBufferParameter };
-				case WSAENOTCONN: return { ReceiveStatus::NotConnected };
-				case WSAEINTR: return { ReceiveStatus::Cancelled };
-				case WSAEINPROGRESS: return { ReceiveStatus::OperationInProgress };
-				case WSAENETRESET: return { ReceiveStatus::ConnectionReset };
-				case WSAENOTSOCK: return { ReceiveStatus::NotASocket };
-				case WSAEOPNOTSUPP: return { ReceiveStatus::NotSupported };
-				case WSAESHUTDOWN: return { ReceiveStatus::Shutdown };
-				case WSAEWOULDBLOCK: return { ReceiveStatus::WouldBlock };
-				case WSAEMSGSIZE: return { ReceiveStatus::MessageTooLarge };
-				case WSAEINVAL: return { ReceiveStatus::UnboundSocket };
-				case WSAECONNABORTED: return { ReceiveStatus::ConnectionAborted };
-				case WSAETIMEDOUT: return { ReceiveStatus::Timeout };
-				case WSAECONNRESET: return { ReceiveStatus::RemoteConnectionReset };
-				default: return { ReceiveStatus::Unknown };
+				case WSAENETDOWN: 		return { ReceiveStatus::NetworkDown };
+				case WSAEFAULT: 		return { ReceiveStatus::InvalidBufferParameter };
+				case WSAENOTCONN: 		return { ReceiveStatus::NotConnected };
+				case WSAEINTR: 			return { ReceiveStatus::Cancelled };
+				case WSAEINPROGRESS: 	return { ReceiveStatus::OperationInProgress };
+				case WSAENETRESET: 		return { ReceiveStatus::ConnectionReset };
+				case WSAENOTSOCK: 		return { ReceiveStatus::NotASocket };
+				case WSAEOPNOTSUPP: 	return { ReceiveStatus::NotSupported };
+				case WSAESHUTDOWN: 		return { ReceiveStatus::Shutdown };
+				case WSAEWOULDBLOCK: 	return { ReceiveStatus::WouldBlock };
+				case WSAEMSGSIZE: 		return { ReceiveStatus::MessageTooLarge };
+				case WSAEINVAL: 		return { ReceiveStatus::UnboundSocket };
+				case WSAECONNABORTED: 	return { ReceiveStatus::ConnectionAborted };
+				case WSAETIMEDOUT: 		return { ReceiveStatus::Timeout };
+				case WSAECONNRESET: 	return { ReceiveStatus::RemoteConnectionReset };
+				default: 				return { ReceiveStatus::Unknown };
 				}
 			}
 			return { ReceiveStatus::Success, static_cast<size_t>(r) };
