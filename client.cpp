@@ -18,7 +18,6 @@ int main()
 	// PROBLEM 2:
 	// 	How do we allow this to do things and receive things at the same time?
 
-
 	std::string line;
 	while (std::getline(std::cin, line))
 	{
