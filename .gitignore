@@ -3,3 +3,4 @@ build*
 .vscode/BROWSE.VC.DB-wal
 .vscode/BROWSE.VC.DB-shm
 .vscode/BROWSE.VC.DB
+.cache

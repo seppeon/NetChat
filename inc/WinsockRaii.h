@@ -1,5 +1,7 @@
 #pragma once
 #include <string>
+#include <atomic>
+#include <mutex>
 
 namespace Net
 {
@@ -26,6 +28,7 @@ namespace Net
 
 		WinsockErrors GetError() const noexcept;
 	private:
+		static std::mutex ref_lock;
 		static int ref_count;
 	};
 

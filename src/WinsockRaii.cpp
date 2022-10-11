@@ -1,4 +1,5 @@
 #include "WinsockRaii.h"
+#include <mutex>
 
 #define WIN32_LEAN_AND_MEAN 
 #include <windows.h>
@@ -9,9 +10,11 @@ namespace Net
 {
 	static constexpr auto winsock_version = MAKEWORD(2,2);
 	int WinsockRaii::ref_count = 0;
+	std::mutex WinsockRaii::ref_lock{};
 
 	WinsockRaii::WinsockRaii()
 	{
+		std::scoped_lock lock{ ref_lock };
 		if (ref_count++ == 0)
 		{
 			WSADATA wsa;
@@ -22,6 +25,7 @@ namespace Net
 
 	WinsockRaii::~WinsockRaii()
 	{
+		std::scoped_lock lock{ ref_lock };
 		if (--ref_count == 0)
 		{
 			WSACleanup();

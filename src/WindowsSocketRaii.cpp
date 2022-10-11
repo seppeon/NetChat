@@ -1,4 +1,5 @@
 #include "WindowsSocketRaii.h"
+#include <stdexcept>
 
 #define WIN32_LEAN_AND_MEAN 
 #include <windows.h>
@@ -12,7 +13,7 @@ namespace Net
 	{
 		if (m_socket == INVALID_SOCKET)
 		{
-			throw GetError();
+			throw std::logic_error(GetErrorDescription(GetError()).data());
 		}
 	}
 

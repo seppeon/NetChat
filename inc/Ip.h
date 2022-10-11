@@ -12,6 +12,7 @@ namespace Net
 		Ip(Ipv6 const & ip) noexcept;
 
 		IpVersion GetVersion() const noexcept;
+		bool IsValid() const noexcept;
 	private:
 		friend std::string ToString(Ip const & ip) noexcept;
 		std::string m_data;

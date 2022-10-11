@@ -17,6 +17,11 @@ namespace Net
 		return m_version;
 	}
 
+	bool Ip::IsValid() const noexcept
+	{
+		return not m_data.empty();
+	}
+
 	std::string ToString(Ip const & ip) noexcept
 	{
 		return ip.m_data;
